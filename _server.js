@@ -27,18 +27,18 @@ const server = module.exports = http.createServer((req, res) => {
     let text = parsedQueryString.text;
 
     if((text === '') || (text === undefined)) {
-      console.log(text);
       text = 'I need something good to say';
-
     }
 
     sendResponse(res, 200, `<pre>${cowsay.say({text:text})}</pre>`);
 
-
   } else if (req.method === 'POST' && req.url.pathname === '/api/cowsay') {
-    let body = {"content": "<cowsay cow text>"};
+    let body = '';
     req.on('data', function(data){
       body += data.toString();
+      if ( (body === '') || (body === undefined) ){
+        sendResponse(res, 400, {'error': 'invalid request: text query required'});
+      }
     });
 
     req.on('end', function() {
@@ -49,7 +49,12 @@ const server = module.exports = http.createServer((req, res) => {
         return sendResponse(res, 400, 'bad json!');
       }
       console.log(json);
-      sendResponse(res, 200, 'got the JSON');
+      let text = json.text;
+      if( (text === '') || (text === undefined) ) {
+        sendResponse(res, 400, `{'error': 'invalid request: text query required'}`);
+      } else {
+        sendResponse(res, 200, `{'content':'${cowsay.say( {'text':text} )}'}`);
+      }
     });
   } else {
     sendResponse(res, 400, 'bad request');
