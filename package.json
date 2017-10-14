@@ -19,6 +19,7 @@
   "homepage": "https://github.com/hanhthaoluu/lab-07-http-server#readme",
   "devDependencies": {
     "expect": "^21.2.1",
-    "mocha": "^4.0.1"
+    "mocha": "^4.0.1",
+    "superagent": "^3.6.3"
   }
 }

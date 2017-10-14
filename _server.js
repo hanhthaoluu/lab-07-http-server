@@ -14,7 +14,7 @@ fs.readFile('./requests/getRequest.html', function(err, data) {
 
 let sendResponse = function(res, status, body) {
   res.writeHead(status, {'Content-Type': 'text/html'});
-  res.write(body);
+  res.write(body); //res.text in test.js
   res.end();
 };
 
@@ -33,6 +33,8 @@ const server = module.exports = http.createServer((req, res) => {
     sendResponse(res, 200, `<pre>${cowsay.say({text:text})}</pre>`);
 
   } else if (req.method === 'POST' && req.url.pathname === '/api/cowsay') {
+    //post is similar to submitting a form; post does not send via url; post sends json.body
+    //in terminal, run this command:  echo '{"text": "hello"}' | http localhost:3000/api/cowsay
     let body = '';
     req.on('data', function(data){
       body += data.toString();
@@ -60,3 +62,6 @@ const server = module.exports = http.createServer((req, res) => {
     sendResponse(res, 400, 'bad request');
   }
 });
+
+
+//_server.js ..._ underscore denotes internal api, meant to be used by other pieces of node, meant to be internally used rather than like run as a file
